@@ -7,15 +7,29 @@ package sptvr19myshop;
 
 import entity.Consumer;
 import entity.Product;
+
 import java.util.Scanner;
+import tools.ProductFactory;
+import tools.ConsumerFactory;
+import tools.ConsumerSaver;
+import tools.ProductSaver;
+
 
 /**
  *
  * @author A
  */
 class App {
-    private Product[] productArray = new Product[5];
-    private Consumer[] consumerArray = new Consumer[3];
+    private Product[] productArray = new Product[10];
+    private Consumer[] consumerArray = new Consumer[10];
+
+    public App(){
+        ProductSaver productSaver = new ProductSaver();
+        productArray = productSaver.loadFile();
+        ConsumerSaver consumerSaver = new ConsumerSaver();
+        consumerArray = consumerSaver.loadFile();
+
+    }
     public void run() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("===My shop===");
@@ -36,49 +50,57 @@ class App {
                     
                 case (1):
                     System.out.println("---Добавить товар---");
-                    Product product = new Product("яблоко", 100, 2);
-                    productArray[0] = product;
-                   
-                    Product product1 = new Product("апельсин", 150, 1);
-                    productArray[1] = product1;
-                   
-                    Product product2 = new Product("груша", 70, 2);
-                    productArray[2] = product2;
-                    
-                    Product product3 = new Product("помидор", 140, 3);
-                    productArray[3] = product3;
-                    
-                    Product product4 = new Product("арбуз", 150, 5);
-                    productArray[4] = product4;
+                    Product product;
+                    ProductFactory productFactory = new ProductFactory();
+                    product = productFactory.createProduct();
+                    for (int i = 0; i < productArray.length; i++) {
+                        if(productArray[i]==null) {
+                            productArray[i] = product;
+                            break;
+                        }
+                    }
                     System.out.println("товар добавлен");
+                    ProductSaver productSaver = new ProductSaver();
+                    productSaver.saveBooks(productArray);
                     System.out.println("===========================================");
                     break;
                 case (2):
                     System.out.println("---Список товаров---");
-                    for (int i = 0; i < 5; i++) {
-                        System.out.println("Название товара: "+productArray[i].getName()+"\nКоличество: "+productArray[i].getQuantity()
-                                +" штук \nЦена : "+productArray[i].getPrice()+"$\n==========================");
+                    for (int i = 0; i < productArray.length; i++) {
+                        if(productArray[i]!=null) {
+                            System.out.println("Название товара: "+productArray[i].getName()
+                                    +"\nКоличество: "+productArray[i].getQuantity()
+                                    +" штук \nЦена : "+productArray[i].getPrice()
+                                    +"$\n==========================");
+                        }
                     }
                     System.out.println("===========================================");
                     break;
                 case (3):
                     System.out.println("---Добавить покупки---");
-                    Consumer consumer = new Consumer("Роман", productArray[0].getName(), 10);
-                    Consumer consumer1 = new Consumer("Иван", productArray[4].getName(), 2);
-                    Consumer consumer2 = new Consumer("Олег", productArray[2].getName(), 12);
-                    consumerArray[0] = consumer;
-                    consumerArray[1] = consumer1;
-                    consumerArray[2] = consumer2;
+                    Consumer consumer;
+                    ConsumerFactory consumerFactory = new ConsumerFactory();
+                    consumer = consumerFactory.createConsumer();
+                    for (int i = 0; i < consumerArray.length; i++) {
+                        if(consumerArray[i]==null) {
+                            consumerArray[i] = consumer;
+                            break;
+                        }    
+                    }
                     System.out.println("Покупки добавлены");
+                    ConsumerSaver consumerSaver = new ConsumerSaver();
+                    consumerSaver.saveBooks(consumerArray);
                     System.out.println("===========================================");
                     break;
                 case (4):
                     System.out.println("---Список покупок---");
-                    for (int i = 0; i < 3; i++) {
+                    for (int i = 0; i < consumerArray.length; i++) {
+                        if(consumerArray[i]!=null) {
                         System.out.println(consumerArray[i].getName()+
                                 " купил "+consumerArray[i].getPurchase()+
                                 " в количестве "+consumerArray[i].getQuantity()+" штук");
                         System.out.println("===========================================");
+                        }
                     }
 
 
